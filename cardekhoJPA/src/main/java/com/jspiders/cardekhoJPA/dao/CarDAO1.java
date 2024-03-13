@@ -11,27 +11,21 @@ import javax.persistence.Query;
 
 import com.jspiders.cardekhoJPA.dto.CarDTO;
 
-public class CarDAO {
+public class CarDAO1 {
+
 	private static EntityManagerFactory entityManagerFactory;
 	private static EntityManager entityManager;
 	private static EntityTransaction entityTransaction;
 
 	public void viewAll() {
-		openConnection();
-		entityTransaction.begin();
-
 		List<CarDTO> carList = findAll();
 		if (carList.isEmpty()) {
 			System.out.println("No Car is Available!");
-		}
-		else{
+		} else {
 			for (CarDTO car : carList) {
 				System.out.println(car);
 			}
 		}
-
-		entityTransaction.commit();
-		closeConnection();
 	}
 
 	@SuppressWarnings("unchecked")
@@ -79,99 +73,69 @@ public class CarDAO {
 	}
 
 	public void remove(Scanner scanner) {
-
 		System.out.println("Enter Car Id : ");
 		int id = scanner.nextInt();
 
-		openConnection();
-		entityTransaction.begin();
-
 		CarDTO carFound = entityManager.find(CarDTO.class, id);
-		if (carFound!=null) {
+		if (carFound != null) {
 			entityManager.remove(carFound);
+		} else {
+			System.out.println("Car with id " + id + " is not found!");
 		}
-		else {
-			System.out.println("Car with id "+id+" is not found!");
-		}
-		
-		entityTransaction.commit();
-		closeConnection();
 	}
 
 	public void search(Scanner scanner) {
-
 		boolean flag = true;
 		while (flag) {
 			System.out.println("=====Search Car Menu====\n" + "1. Search Car By Id  \n" + "2. Search Car By Name  \n"
 					+ "3. Search Car By Brand \n" + "4. Search Car By Fuel Type \n" + "5. Search Car By Price \n"
 					+ "6. Back To Main Menu \n");
 			int choice = scanner.nextInt();
+
 			switch (choice) {
 			case 1:
 				System.out.println("Enter Car Id : ");
 				int id = scanner.nextInt();
 
-				openConnection();
-				entityTransaction.begin();
-
 				CarDTO carFound = entityManager.find(CarDTO.class, id);
-				if (carFound!=null) {
+				if (carFound != null) {
 					System.out.println(carFound);
+				} else {
+					System.out.println("Car with id " + id + " is not found!");
 				}
-				else {
-				System.out.println("Car with id "+id+" is not found!");
-				}
-				
-				entityTransaction.commit();
-				closeConnection();
+
 				break;
 			case 2:
-				openConnection();
-				entityTransaction.begin();
 
 				List<CarDTO> carByName = findByName(scanner);
 				for (CarDTO car : carByName) {
 					System.out.println(car);
 				}
 
-				entityTransaction.commit();
-				closeConnection();
 				break;
 			case 3:
-				openConnection();
-				entityTransaction.begin();
 
 				List<CarDTO> carByBrand = findByBrand(scanner);
 				for (CarDTO car : carByBrand) {
 					System.out.println(car);
 				}
 
-				entityTransaction.commit();
-				closeConnection();
 				break;
 			case 4:
-				openConnection();
-				entityTransaction.begin();
 
 				List<CarDTO> carByFuelType = findByFuelType(scanner);
 				for (CarDTO car : carByFuelType) {
 					System.out.println(car);
 				}
 
-				entityTransaction.commit();
-				closeConnection();
 				break;
 			case 5:
-				openConnection();
-				entityTransaction.begin();
 
 				List<CarDTO> carByPrice = findByPrice(scanner);
 				for (CarDTO car : carByPrice) {
 					System.out.println(car);
 				}
 
-				entityTransaction.commit();
-				closeConnection();
 				break;
 
 			case 6:
@@ -196,7 +160,7 @@ public class CarDAO {
 		query.setParameter(1, name);
 		List carList = query.getResultList();
 		if (carList.isEmpty()) {
-			System.out.println("Car with name "+name+" is not available");
+			System.out.println("Car with name " + name + " is not available");
 		}
 		return carList;
 	}
@@ -210,9 +174,9 @@ public class CarDAO {
 		query.setParameter(1, brand);
 		List carList = query.getResultList();
 		if (carList.isEmpty()) {
-			System.out.println("Car with brand "+brand+" is not available");
+			System.out.println("Car with brand " + brand + " is not available");
 		}
-		
+
 		return carList;
 	}
 
@@ -225,7 +189,7 @@ public class CarDAO {
 		query.setParameter(1, fuelType);
 		List carList = query.getResultList();
 		if (carList.isEmpty()) {
-			System.out.println("Car with fuelType "+fuelType+" is not available");
+			System.out.println("Car with fuelType " + fuelType + " is not available");
 		}
 		return carList;
 	}
@@ -243,7 +207,7 @@ public class CarDAO {
 		query.setParameter(2, maxPrice);
 		List carList = query.getResultList();
 		if (carList.isEmpty()) {
-			System.out.println("Car with price between "+minPrice+" and "+maxPrice+" is not available");
+			System.out.println("Car with price between " + minPrice + " and " + maxPrice + " is not available");
 		}
 		return carList;
 	}
@@ -251,124 +215,93 @@ public class CarDAO {
 	public void editCar(Scanner scanner) {
 		System.out.println("Enter The Id To Edit The Car :");
 		int id = scanner.nextInt();
-			
+
 		boolean flag = true;
 		while (flag) {
 			System.out.println("=====Edit Menu====\n" + "1. Edit Name  \n" + "2. Edit Brand \n" + "3. Edit Model \n"
 					+ "4. Edit Fuel Type \n" + "5. Edit Price \n" + "6. Edit Color \n" + "7. Back To Main Menu \n");
 			int choice = scanner.nextInt();
+
 			switch (choice) {
-			case 1:
-			{
+			case 1: {
 				System.out.println("Enter New Name :");
 				String name = scanner.next();
-				
-				openConnection();
-				entityTransaction.begin();
+
 				CarDTO car = entityManager.find(CarDTO.class, id);
-				
+
 				car.setName(name);
 				entityManager.persist(car);
-				
-				entityTransaction.commit();
-				closeConnection();
+
 				break;
 			}
-		
-			case 2:
-			{
+
+			case 2: {
 				System.out.println("Enter New Brand :");
 				String brand = scanner.next();
-				
-				openConnection();
-				entityTransaction.begin();
+
 				CarDTO car = entityManager.find(CarDTO.class, id);
-				
+
 				car.setBrand(brand);
 				entityManager.persist(car);
-		
-				entityTransaction.commit();	
-				closeConnection();
+
 				break;
 			}
-			case 3:
-			{
+			case 3: {
 				System.out.println("Enter New Model :");
 				String model = scanner.next();
-				
-				openConnection();
-				entityTransaction.begin();
+
 				CarDTO car = entityManager.find(CarDTO.class, id);
-				
+
 				car.setModel(model);
 				entityManager.persist(car);
-				
-				entityTransaction.commit();	
-				closeConnection();
+
 				break;
 			}
-			case 4:
-			{
+			case 4: {
 				System.out.println("Enter New Fuel Type :");
 				String fuelType = scanner.next();
-				
-				openConnection();
-				entityTransaction.begin();
+
 				CarDTO car = entityManager.find(CarDTO.class, id);
-				
+
 				car.setFuelType(fuelType);
 				entityManager.persist(car);
-				
-				entityTransaction.commit();	
-				closeConnection();
+
 				break;
 			}
-				
-			case 5:
-			{
+
+			case 5: {
 				System.out.println("Enter New Price :");
 				Double price = scanner.nextDouble();
-				
-				openConnection();
-				entityTransaction.begin();
+
 				CarDTO car = entityManager.find(CarDTO.class, id);
-				
+
 				car.setPrice(price);
 				entityManager.persist(car);
-				
-				entityTransaction.commit();	
-				closeConnection();
+
 				break;
 			}
-				
-			case 6:
-			{
+
+			case 6: {
 				System.out.println("Enter New Color :");
 				String color = scanner.next();
-				
-				openConnection();
-				entityTransaction.begin();
+
 				CarDTO car = entityManager.find(CarDTO.class, id);
-				
+
 				car.setName(color);
 				entityManager.persist(car);
-				
-				entityTransaction.commit();	
-				closeConnection();
 				break;
 			}
-				
+
 			case 7:
 				System.out.println("Edit Menu Closed!!!");
 				flag = false;
 				break;
-				
+
 			default:
 				System.out.println("Invalid Choice");
 				break;
 			}
 		}
-		
 	}
 
 	private static void openConnection() {
@@ -390,5 +323,5 @@ public class CarDAO {
 			}
 		}
 	}
-
 }
+//-67

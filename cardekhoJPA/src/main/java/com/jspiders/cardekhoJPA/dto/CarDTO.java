@@ -1,4 +1,4 @@
-package com.jspiders.cardekhoJPA.ato;
+package com.jspiders.cardekhoJPA.dto;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
